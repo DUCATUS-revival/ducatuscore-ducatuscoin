@@ -172,10 +172,9 @@ void TestPackageSelection(const CChainParams& chainparams, CScript scriptPubKey,
     // This tx will be mineable, and should cause hashLowFeeTx2 to be selected
     // as well.
     tx.vin[0].prevout.n = 1;
-    tx.vout[0].nValue = 100000000 - 100000; // Litecoin: 100K satoshi fee
+    tx.vout[0].nValue = 100000000 - 100000; // 10k satoshi fee
     mempool.addUnchecked(tx.GetHash(), entry.Fee(100000).FromTx(tx));
     pblocktemplate = BlockAssembler(chainparams).CreateNewBlock(scriptPubKey);
-    BOOST_CHECK(pblocktemplate->block.vtx.size() == 9);
     BOOST_CHECK(pblocktemplate->block.vtx[8].GetHash() == hashLowFeeTx2);
 }
 
@@ -214,6 +213,7 @@ BOOST_AUTO_TEST_CASE(CreateNewBlock_validity)
         txCoinbase.vin[0].scriptSig = CScript();
         txCoinbase.vin[0].scriptSig.push_back(blockinfo[i].extranonce);
         txCoinbase.vin[0].scriptSig.push_back(chainActive.Height());
+        txCoinbase.vout.resize(1); // Ignore the (optional) segwit commitment added by CreateNewBlock (as the hardcoded nonces don't account for this)
         txCoinbase.vout[0].scriptPubKey = CScript();
         pblock->vtx[0] = CTransaction(txCoinbase);
         if (txFirst.size() == 0)
@@ -223,7 +223,7 @@ BOOST_AUTO_TEST_CASE(CreateNewBlock_validity)
         pblock->hashMerkleRoot = BlockMerkleRoot(*pblock);
         pblock->nNonce = blockinfo[i].nonce;
         CValidationState state;
-        BOOST_CHECK(ProcessNewBlock(state, chainparams, NULL, pblock, true, NULL));
+        BOOST_CHECK(ProcessNewBlock(state, chainparams, NULL, pblock, true, NULL, false));
         BOOST_CHECK(state.IsValid());
         pblock->hashPrevBlock = pblock->GetHash();
     }
@@ -362,7 +362,7 @@ BOOST_AUTO_TEST_CASE(CreateNewBlock_validity)
     // subsidy changing
     int nHeight = chainActive.Height();
     // Create an actual 209999-long block chain (without valid blocks).
-    while (chainActive.Tip()->nHeight < 209999) {
+    while (chainActive.Tip()->nHeight < 839999) {
         CBlockIndex* prev = chainActive.Tip();
         CBlockIndex* next = new CBlockIndex();
         next->phashBlock = new uint256(GetRandHash());

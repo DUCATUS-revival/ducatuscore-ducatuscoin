@@ -36,10 +36,11 @@ from threading import RLock
 from threading import Thread
 import logging
 import copy
+import litecoin_scrypt
 from test_framework.siphash import siphash256
 
 BIP0031_VERSION = 60000
-MY_VERSION = 70014  # past bip-31 for ping/pong
+MY_VERSION = 80014  # past bip-31 for ping/pong
 MY_SUBVERSION = b"/python-mininode-tester:0.0.3/"
 
 MAX_INV_SZ = 50000
@@ -513,7 +514,7 @@ class CTransaction(object):
     def is_valid(self):
         self.calc_sha256()
         for tout in self.vout:
-            if tout.nValue < 0 or tout.nValue > 21000000 * COIN:
+            if tout.nValue < 0 or tout.nValue > 84000000 * COIN:
                 return False
         return True
 
@@ -535,6 +536,7 @@ class CBlockHeader(object):
             self.nNonce = header.nNonce
             self.sha256 = header.sha256
             self.hash = header.hash
+            self.scrypt256 = header.scrypt256
             self.calc_sha256()
 
     def set_null(self):
@@ -546,6 +548,7 @@ class CBlockHeader(object):
         self.nNonce = 0
         self.sha256 = None
         self.hash = None
+        self.scrypt256 = None
 
     def deserialize(self, f):
         self.nVersion = struct.unpack("<i", f.read(4))[0]
@@ -556,6 +559,7 @@ class CBlockHeader(object):
         self.nNonce = struct.unpack("<I", f.read(4))[0]
         self.sha256 = None
         self.hash = None
+        self.scrypt256 = None
 
     def serialize(self):
         r = b""
@@ -578,9 +582,11 @@ class CBlockHeader(object):
             r += struct.pack("<I", self.nNonce)
             self.sha256 = uint256_from_str(hash256(r))
             self.hash = encode(hash256(r)[::-1], 'hex_codec').decode('ascii')
+            self.scrypt256 = uint256_from_str(litecoin_scrypt.getPoWHash(r))
 
     def rehash(self):
         self.sha256 = None
+        self.scrypt256 = None
         self.calc_sha256()
         return self.sha256
 
@@ -639,7 +645,7 @@ class CBlock(CBlockHeader):
     def is_valid(self):
         self.calc_sha256()
         target = uint256_from_compact(self.nBits)
-        if self.sha256 > target:
+        if self.scrypt256 > target:
             return False
         for tx in self.vtx:
             if not tx.is_valid():
@@ -651,7 +657,7 @@ class CBlock(CBlockHeader):
     def solve(self):
         self.rehash()
         target = uint256_from_compact(self.nBits)
-        while self.sha256 > target:
+        while self.scrypt256 > target:
             self.nNonce += 1
             self.rehash()
 
@@ -1595,8 +1601,8 @@ class NodeConn(asyncore.dispatcher):
         b"blocktxn": msg_blocktxn
     }
     MAGIC_BYTES = {
-        "mainnet": b"\xf9\xbe\xb4\xd9",   # mainnet
-        "testnet3": b"\x0b\x11\x09\x07",  # testnet3
+        "mainnet": b"\xfb\xc0\xb6\xdb",   # mainnet
+        "testnet3": b"\xfc\xc1\xb7\xdc",  # testnet3
         "regtest": b"\xfa\xbf\xb5\xda",   # regtest
     }
 
@@ -1625,7 +1631,7 @@ class NodeConn(asyncore.dispatcher):
         vt.addrFrom.ip = "0.0.0.0"
         vt.addrFrom.port = 0
         self.send_message(vt, True)
-        print('MiniNode: Connecting to Bitcoin Node IP # ' + dstaddr + ':' \
+        print('MiniNode: Connecting to Litecoin Node IP # ' + dstaddr + ':' \
             + str(dstport))
 
         try:

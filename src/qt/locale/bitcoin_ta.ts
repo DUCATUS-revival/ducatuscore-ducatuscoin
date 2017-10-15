@@ -25,9 +25,21 @@
         <source>&amp;Delete</source>
         <translation>&amp;அழி</translation>
     </message>
+    <message>
+        <source>Sending addresses</source>
+        <translation>முகவரிகள் அனுப்பப்படுகின்றன</translation>
+    </message>
+    <message>
+        <source>Receiving addresses</source>
+        <translation>முகவரிகள் பெறப்படுகின்றன</translation>
+    </message>
     </context>
 <context>
     <name>AddressTableModel</name>
+    <message>
+        <source>Address</source>
+        <translation>முகவரி</translation>
+    </message>
     </context>
 <context>
     <name>AskPassphraseDialog</name>
@@ -78,8 +90,8 @@
         <translation>&amp;செய்தியை சரிசெய்...</translation>
     </message>
     <message>
-        <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
+        <source>Litecoin</source>
+        <translation>Litecoin</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -558,6 +570,10 @@
         <source>&amp;Save Image...</source>
         <translation>&amp;படத்தை சேமி...</translation>
     </message>
+    <message>
+        <source>Address</source>
+        <translation>முகவரி</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -678,6 +694,10 @@
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>Address</source>
+        <translation>முகவரி</translation>
+    </message>
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -694,8 +714,8 @@
 <context>
     <name>bitcoin-core</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin மையம்</translation>
+        <source>Litecoin Core</source>
+        <translation>Litecoin மையம்</translation>
     </message>
     <message>
         <source>(default: %u)</source>

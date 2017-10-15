@@ -75,10 +75,10 @@ for arg in sys.argv[1:]:
         opts.add(arg)
 
 #Set env vars
-if "BITCOIND" not in os.environ:
-    os.environ["BITCOIND"] = BUILDDIR + '/src/bitcoind' + EXEEXT
-if "BITCOINCLI" not in os.environ:
-    os.environ["BITCOINCLI"] = BUILDDIR + '/src/bitcoin-cli' + EXEEXT
+if "LITECOIND" not in os.environ:
+    os.environ["LITECOIND"] = BUILDDIR + '/src/litecoind' + EXEEXT
+if "LITECOINCLI" not in os.environ:
+    os.environ["LITECOINCLI"] = BUILDDIR + '/src/litecoin-cli' + EXEEXT
 
 if EXEEXT == ".exe" and "-win" not in opts:
     # https://github.com/bitcoin/bitcoin/commit/d52802551752140cf41f0d9a225a43e84404d3e9
@@ -128,6 +128,10 @@ testScripts = [
     'signrawtransactions.py',
     'nodehandling.py',
     'reindex.py',
+    'addressindex.py',
+    'timestampindex.py',
+    'spentindex.py',
+    'txindex.py',
     'decodescript.py',
     'blockchain.py',
     'disablewallet.py',
@@ -144,6 +148,7 @@ testScripts = [
     'signmessages.py',
     'p2p-compactblocks.py',
     'nulldummy.py',
+    'test_script_address2.py'
 ]
 if ENABLE_ZMQ:
     testScripts.append('zmq_test.py')
@@ -243,6 +248,10 @@ class RPCTestHandler:
         self.test_list = test_list
         self.flags = flags
         self.num_running = 0
+        # In case there is a graveyard of zombie bitcoinds, we can apply a
+        # pseudorandom offset to hopefully jump over them.
+        # (625 is PORT_RANGE/MAX_NODES)
+        self.portseed_offset = int(time.time() * 1000) % 625
         self.jobs = []
 
     def get_next(self):
@@ -250,7 +259,7 @@ class RPCTestHandler:
             # Add tests
             self.num_running += 1
             t = self.test_list.pop(0)
-            port_seed = ["--portseed=%s" % len(self.test_list)]
+            port_seed = ["--portseed={}".format(len(self.test_list) + self.portseed_offset)]
             log_stdout = tempfile.SpooledTemporaryFile(max_size=2**16)
             log_stderr = tempfile.SpooledTemporaryFile(max_size=2**16)
             self.jobs.append((t,

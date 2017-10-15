@@ -30,6 +30,7 @@ static const CBitcoinAddress addr2C("LWegHWHB5rmaF5rgWYt1YN3StapRdnGJfU");
 
 static const string strAddressBad("Lbi6bpMhSwp2CXkivEeUK9wzyQEFzHDfSr");
 
+
 #ifdef KEY_TESTS_DUMPINFO
 void dumpKeyInfo(uint256 privkey)
 {

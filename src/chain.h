@@ -276,6 +276,11 @@ public:
         return *phashBlock;
     }
 
+    uint256 GetBlockPoWHash() const
+    {
+        return GetBlockHeader().GetPoWHash();
+    }
+
     int64_t GetBlockTime() const
     {
         return (int64_t)nTime;
@@ -391,11 +396,6 @@ public:
         block.nNonce          = nNonce;
         return block.GetHash();
     }
-
-    uint256 GetBlockPoWHash() const
-    {
-        return GetBlockHeader().GetPoWHash();
-    }    
 
 
     std::string ToString() const
