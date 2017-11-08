@@ -2,7 +2,7 @@
 FROM ubuntu:14.04
 
 # add bitcoind from the official PPA
-RUN apt-get update
+RUN apt-get update --fix-missing
 RUN apt-get install -y ntp git build-essential libssl-dev libdb-dev libdb++-dev libboost-all-dev libqrencode-dev libevent-dev autoconf libtool libboost-all-dev wget software-properties-common python-software-properties
 RUN add-apt-repository -y ppa:bitcoin/bitcoin
 RUN apt-get update -y

@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build . -t ducatuscore-ducatuscoin
+docker build . -t ducatuscore-ducatuscoin-p90x
