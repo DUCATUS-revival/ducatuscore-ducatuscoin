@@ -50,7 +50,7 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
  */
 static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
-    const char* pszTimestamp = "bc1c914c79e3612d5569d3b980e089edb016536e26f54791f3001206456da0d1";
+    const char* pszTimestamp = "P90X is a complete 90-day home fitness system";
 
     //const char* pszTimestamp = "NY Times 05/Oct/2011 Steve Jobs, Apple’s Visionary, Dies at 56";
     const CScript genesisOutputScript = CScript() << ParseHex("040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9") << OP_CHECKSIG;
@@ -111,33 +111,30 @@ public:
          * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
          * a large 32-bit integer with any alignment.
          */
-        pchMessageStart[0] = 0xeb;
-        pchMessageStart[1] = 0xd0;
-        pchMessageStart[2] = 0xc6;
-        pchMessageStart[3] = 0xdc;
+        pchMessageStart[0] = 0xbe;
+        pchMessageStart[1] = 0xad;
+        pchMessageStart[2] = 0xb4;
+        pchMessageStart[3] = 0x44;
         nDefaultPort = 9691;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1483501153, 1, 0x207fffff, 1, 50 * COIN); 
+        genesis = CreateGenesisBlock(1483501153, 2, 0x207fffff, 1, 50 * COIN); 
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0xc05fc63e3800e1067bc03af8874bdbc14d610ec0e9b6de8835d07366a8e5a403"));
-        assert(genesis.hashMerkleRoot == uint256S("0x814de9ca2dce68ecbb8d4a71d96a1dd2d5b668dcc256b11e97fd22e95c061249"));
+        assert(consensus.hashGenesisBlock == uint256S("0x0052eabed6d856745fb06a646365ae3cfcd7ca0025a68479bc59047848e4f120"));
+        assert(genesis.hashMerkleRoot == uint256S("0x4c3cdbbc130856bc4f15d285b9b379b08a808568ac6f7f1b108f3d746df5ce2e"));
 
         // Note that of those with the service bits flag, most only support a subset of possible options
-        vSeeds.push_back(CDNSSeedData("ducatusdns.com", "dnsseed.ducatusdns.com", true));
-        vSeeds.push_back(CDNSSeedData("ducatus.io", "dnsseed.ducatus.io"));
-        vSeeds.push_back(CDNSSeedData("ducatus.io", "dnsseed1.ducatus.io", true));
-        vSeeds.push_back(CDNSSeedData("ducatus.io", "dnsseed2.ducatus.io", false));
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,49);
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,6);
-        base58Prefixes[SCRIPT_ADDRESS2] = std::vector<unsigned char>(1,51);
-        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,177);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,59);
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,30);
+        base58Prefixes[SCRIPT_ADDRESS2] = std::vector<unsigned char>(1,7);
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,130);
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container<std::vector<unsigned char> >();
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x88)(0xAD)(0xE4).convert_to_container<std::vector<unsigned char> >();
 
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_main, pnSeed6_main + ARRAYLEN(pnSeed6_main));
 			vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
+			//vSeeds.clear();      //!< Regtest mode doesn't have any DNS seeds.
 
         fMiningRequiresPeers = true;
         fDefaultConsistencyChecks = false;
@@ -170,7 +167,7 @@ public:
 	//};
 	checkpointData = (CCheckpointData){
 		boost::assign::map_list_of
-			( 0, uint256S("0xc05fc63e3800e1067bc03af8874bdbc14d610ec0e9b6de8835d07366a8e5a403")),
+			( 0, uint256S("0x0052eabed6d856745fb06a646365ae3cfcd7ca0025a68479bc59047848e4f120")),
 			0,
 			0,
 			0
@@ -179,7 +176,6 @@ public:
     }
 };
 static CMainParams mainParams;
-
 /**
  * Testnet (v4)
  */
@@ -372,4 +368,3 @@ void UpdateRegtestBIP9Parameters(Consensus::DeploymentPos d, int64_t nStartTime,
 {
 	regTestParams.UpdateBIP9Parameters(d, nStartTime, nTimeout);
 }
-
