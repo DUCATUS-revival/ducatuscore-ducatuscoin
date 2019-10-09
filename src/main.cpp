@@ -1797,14 +1797,11 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
 {
 	// Need to mine blocks quickly, so will mine like this then remove this code block
 
-	CAmount Creward = 385850 * COIN;
-	if (nHeight <= 20160) 
-		return Creward;
-	if (nHeight == 20161) {
-		Creward = 6049 * COIN;
-		return Creward;
+	if (nHeight == 1) {
+	  return 7778742049  * COIN;
+	} else {
+	  return 0;
 	}
-	return 0;
 }
 
 bool IsInitialBlockDownload()
