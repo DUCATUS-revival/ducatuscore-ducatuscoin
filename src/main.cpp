@@ -1797,7 +1797,7 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
 {
 	// Need to mine blocks quickly, so will mine like this then remove this code block
 
-	if (nHeight == 1) {
+	if (nHeight == 2) {
 	  return 7778742049  * COIN;
 	} else {
 	  return 0;
